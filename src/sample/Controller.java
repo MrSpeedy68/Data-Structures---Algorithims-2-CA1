@@ -7,28 +7,27 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.scene.image.*;
 import javafx.event.ActionEvent;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class Controller {
 
-    @FXML
-    public ImageView ImageViewMain;
-    @FXML
-    public MenuItem OpenFile;
-    @FXML
-    public MenuItem Quit;
-    @FXML
-    public Button Btn;
+    @FXML public ImageView ImageViewMain;
+    @FXML public MenuItem OpenFile;
+    @FXML public MenuItem Quit;
+    @FXML public Button Btn;
+    @FXML public Button btn2;
 
 
-    public static String filepath = "";
+    public String filepath = "";
     public static Image inputImage;
+    public PixelReader pixelReader;
 
+    //Open Image Method
     @FXML
     public void OpenPicture(ActionEvent e) {
         FileChooser fileChooser = new FileChooser(); //Open image method
@@ -37,8 +36,11 @@ public class Controller {
 
         inputImage = new Image("file:///" + filepath); //file:/// is needed to pass the bug where absolute path will not work.
         ImageViewMain.setImage(inputImage);
+
+        pixelReader = inputImage.getPixelReader();
     }
 
+    //Change Scene to Tricolour
     @FXML
     public void triColour(ActionEvent e) {
         try {
@@ -48,6 +50,13 @@ public class Controller {
             el.printStackTrace();
         }
     }
+
+    //Exit Program Method
+    @FXML
+    public void ExitProgram(ActionEvent e) {
+        Runtime.getRuntime().exit(0);
+    }
+
 
 
 }
