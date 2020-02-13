@@ -40,8 +40,6 @@ public class TricolourController {
     private Image OriginalImage = Controller.inputImage; //Map inputted image to OriginalImage
     private PixelReader pixelReader;
 
-    private Image TricolouredImg;
-
     @FXML
     public void MainWindowScene(ActionEvent e) {
         try {
@@ -55,7 +53,10 @@ public class TricolourController {
 
     @FXML
     public void initialize() {
-        ImageViewTri.setImage(OriginalImage);
+        if(Controller.processedImg == null) {
+            ImageViewTri.setImage(OriginalImage);
+        }
+        else ImageViewTri.setImage(Controller.processedImg);
 
         pixelReader = OriginalImage.getPixelReader();
     }
@@ -126,7 +127,7 @@ public class TricolourController {
             }
         }
         ImageViewTri.setImage(wImage);
-        TricolouredImg = wImage;
+        Controller.processedImg = wImage;
     }
 /*
     @FXML

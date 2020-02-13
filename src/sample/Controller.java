@@ -25,6 +25,7 @@ public class Controller {
 
     public String filepath = "";
     public static Image inputImage;
+    public static Image processedImg = null;
     public PixelReader pixelReader;
 
     //Open Image Method
@@ -34,7 +35,7 @@ public class Controller {
         fileChooser.setTitle("Open Image File");
         filepath = fileChooser.showOpenDialog(Main.mainWindow).getAbsolutePath();
 
-        inputImage = new Image("file:///" + filepath); //file:/// is needed to pass the bug where absolute path will not work.
+        inputImage = new Image("file:///" + filepath, 512,512,false,false); //file:/// is needed to pass the bug where absolute path will not work.
         ImageViewMain.setImage(inputImage);
 
         pixelReader = inputImage.getPixelReader();
