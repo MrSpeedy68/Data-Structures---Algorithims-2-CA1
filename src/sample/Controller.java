@@ -51,6 +51,11 @@ public class Controller {
         }
     }
 
+    @FXML
+    public void initialize() {
+        ImageViewMain.setImage(inputImage);
+    }
+
     //Exit Program Method
     @FXML
     public void ExitProgram(ActionEvent e) {
