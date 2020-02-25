@@ -24,10 +24,15 @@ public class UnionFind {
         find3(q).parent=find3(p); //The root of q is made reference the root of p
     }
 
-    //Recursive version of find using the ternary (question mark) operator -
-//negative value stored at root
-    public static int find3(int[] a, int id) {
-        return a[id] <0 ? id : find3(a,a[id]);
+
+
+    //Iterative version of find with path compression
+    public static int find(int[] a, int id) {
+        while(a[id]!=id) {
+            a[id]=a[a[id]]; //Compress path
+            id=a[id];
+        }
+        return id;
     }
 
 
