@@ -5,8 +5,27 @@ public class UnionFind {
     public static void main(String[] args) {
 
 
+        int[] dset = {10, 11, 11, 2, 8, 13, 2, 7, 8, 9, 11, 11, 7, 8};
+
+        for (int id = 0; id < dset.length; id++)
+            System.out.println("The root of " + id + " is " +
+                    UnionFind(dset, id));
+
     }
 
+    //Recursive version of union find
+    public static int UnionFind(int[] a, int id) {
+        if(a[id] == id) return id;
+        else return UnionFind(a,a[id]);
+    }
+
+
+
+
+
+
+
+/*
     public void quickUnion() {
 
         int[] dset = {10, 11, 11, 2, 8, 13, 2, 7, 8, 9, 11, 11, 7, 8};
@@ -35,5 +54,5 @@ public class UnionFind {
         return id;
     }
 
-
+*/
 }
