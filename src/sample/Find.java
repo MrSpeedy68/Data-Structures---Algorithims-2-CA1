@@ -1,6 +1,6 @@
 package sample;
 
-public class UnionFind {
+public class Find {
 
     public static void main(String[] args) {
 
@@ -9,14 +9,14 @@ public class UnionFind {
 
         for (int id = 0; id < dset.length; id++)
             System.out.println("The root of " + id + " is " +
-                    UnionFind(dset, id));
+                    Find(dset, id));
 
     }
 
     //Recursive version of union find
-    public static int UnionFind(int[] a, int id) {
+    public static int Find(int[] a, int id) {
         if(a[id] == id) return id;
-        else return UnionFind(a,a[id]);
+        else return Find(a,a[id]);
     }
 
 
