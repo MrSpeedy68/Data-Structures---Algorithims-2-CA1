@@ -21,6 +21,7 @@ public class RecognisionController {
     private PixelReader pixelReader;
     private Image OriginalImage = Controller.inputImage;
 
+
     @FXML Button BloodCellBtn;
     @FXML ImageView ImageViewTri;
     @FXML MenuItem Quit;
@@ -37,27 +38,35 @@ public class RecognisionController {
         pixelReader = OriginalImage.getPixelReader();
     }
 
-
-
     @FXML
     public void AnalyiseImg(ActionEvent e) {
-        int width = (int) Controller.processedImg.getWidth();
-        int height = (int) Controller.processedImg.getHeight();
+        Image img = ImageViewTri.getImage();
+
+        int width = (int) img.getWidth();
+        int height = (int) img.getHeight();
 
         BloodCells = new int[width * height];
 
-        for (int readX = 0; readX < Controller.processedImg.getWidth(); readX++) {
-            for (int readY = 0; readY < Controller.processedImg.getHeight(); readY++) {
-                Color color = pixelReader.getColor(readY,readX);
+        for (int readY = 0; readY < img.getWidth(); readY++) {
+            for (int readX = 0; readX < img.getHeight(); readX++) {
+                Color color = pixelReader.getColor(readX,readY);
+                double Red = color.getRed();
+                double Green = color.getGreen();
+                double Blue = color.getBlue();
+
                 int i = 0;
                 i++;
-                    if(color.getRed() == 1.0) {
-                        BloodCells[i] = 1;
-                    }
-                    else if(color.getRed() < 1.0){
+
+                    //if (color.getRed() == 1 && color.getGreen() == 1 && color.getBlue() == 1) {
+                if(Red > 0.560 && Red < 0.85) {
                         BloodCells[i] = 0;
                     }
+                     else  {
+                        BloodCells[i] = 1;
+                    }
+
                     System.out.print(BloodCells[i]);
+
             }
             System.out.println();
         }

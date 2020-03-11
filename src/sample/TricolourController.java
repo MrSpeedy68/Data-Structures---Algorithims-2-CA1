@@ -40,6 +40,7 @@ public class TricolourController {
 
     private Image OriginalImage = Controller.inputImage; //Map inputted image to OriginalImage
     private PixelReader pixelReader;
+    public static Image ConvertedImage = null; //Image to be used in recognision
 
     @FXML
     public void MainWindowScene(ActionEvent e) {
@@ -130,17 +131,24 @@ public class TricolourController {
                 double Blue = color.getBlue();
 
                 if(Red > 0.560 && Red < 0.85) {
-                    wImage.getPixelWriter().setColor(readX, readY, Color.color(1.0, 0, 0));
+                    wImage.getPixelWriter().setColor(readX, readY, Color.color(1, 0, 0));
                 }
                 else if(Red > 0.27 && Red < 0.5 && Green > 0.04 && Green < 0.22 && Blue > 0.5 && Blue < 0.70 ) {
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(0.27, 0.133, 0.384));
                 }
-                else wImage.getPixelWriter().setColor(readX,readY, Color.color(1.0,1.0,1.0));
+                else wImage.getPixelWriter().setColor(readX,readY, Color.color(1,1,1));
             }
         }
         ImageViewTri.setImage(wImage);
         Controller.processedImg = wImage;
     }
+
+
+
+
+
+
+
 /*
     @FXML
     public static void saveImage(Image image) {
