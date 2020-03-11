@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
@@ -16,35 +17,49 @@ import java.io.IOException;
 
 public class RecognisionController {
 
-    public int[] BloodCell = new int[16384];
+    public int[] BloodCells;
     private PixelReader pixelReader;
+    private Image OriginalImage = Controller.inputImage;
+
+    @FXML Button BloodCellBtn;
+    @FXML ImageView ImageViewTri;
+    @FXML MenuItem Quit;
+    @FXML MenuItem MainWindow;
+
 
     @FXML
-    Button BloodCellBtn;
-    @FXML
-    ImageView ImageViewTri;
-    @FXML
-    MenuItem Quit;
-    @FXML
-    MenuItem MainWindow;
+    public void initialize() {
+        if(Controller.processedImg == null) {
+            ImageViewTri.setImage(OriginalImage);
+        }
+        else ImageViewTri.setImage(Controller.processedImg);
 
+        pixelReader = OriginalImage.getPixelReader();
+    }
 
 
 
     @FXML
     public void AnalyiseImg(ActionEvent e) {
-        for (int readY = 0; readY < Controller.processedImg.getHeight(); readY++) {
-            for (int readX = 0; readX < Controller.processedImg.getWidth(); readX++) {
-                Color color = pixelReader.getColor(readX,readY);
+        int width = (int) Controller.processedImg.getWidth();
+        int height = (int) Controller.processedImg.getHeight();
 
-                double Red = color.getRed();
-                pixelReader.getPixelFormat();
+        BloodCells = new int[width * height];
 
-                if(Red == 1.0) {
-                    //BloodCell[1] = Red;
-                }
-
+        for (int readX = 0; readX < Controller.processedImg.getWidth(); readX++) {
+            for (int readY = 0; readY < Controller.processedImg.getHeight(); readY++) {
+                Color color = pixelReader.getColor(readY,readX);
+                int i = 0;
+                i++;
+                    if(color.getRed() == 1.0) {
+                        BloodCells[i] = 1;
+                    }
+                    else if(color.getRed() < 1.0){
+                        BloodCells[i] = 0;
+                    }
+                    System.out.print(BloodCells[i]);
             }
+            System.out.println();
         }
     }
 

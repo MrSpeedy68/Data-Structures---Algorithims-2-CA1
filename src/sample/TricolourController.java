@@ -34,6 +34,7 @@ public class TricolourController {
     @FXML public Slider GreenSlider;
     @FXML public Slider BlueSlider;
     @FXML public Button TricolourProcess;
+    @FXML public Button DetectCellsBtn;
     //@FXML public Button SaveFile;
 
 
@@ -44,6 +45,16 @@ public class TricolourController {
     public void MainWindowScene(ActionEvent e) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
+            Main.mainWindow.setScene(new Scene(root));
+        } catch (IOException el) {
+            el.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void DetectionTab(ActionEvent e) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("RecognisionTab.fxml"));
             Main.mainWindow.setScene(new Scene(root));
         } catch (IOException el) {
             el.printStackTrace();
@@ -121,9 +132,10 @@ public class TricolourController {
                 if(Red > 0.560 && Red < 0.85) {
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(1.0, 0, 0));
                 }
-                if(Red > 0.27 && Red < 0.5 && Green > 0.04 && Green < 0.22 && Blue > 0.5 && Blue < 0.70 ) {
+                else if(Red > 0.27 && Red < 0.5 && Green > 0.04 && Green < 0.22 && Blue > 0.5 && Blue < 0.70 ) {
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(0.27, 0.133, 0.384));
                 }
+                else wImage.getPixelWriter().setColor(readX,readY, Color.color(1.0,1.0,1.0));
             }
         }
         ImageViewTri.setImage(wImage);

@@ -62,7 +62,7 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <Button fx:id="TricolourProcess" layoutX="901.0" layoutY="175.0" mnemonicParsing="false" onAction="#triColourProcessing" prefHeight="55.0" prefWidth="200.0" text="Process Tricolour">
+      <Button fx:id="TricolourProcess" layoutX="876.0" layoutY="68.0" mnemonicParsing="false" onAction="#triColourProcessing" prefHeight="75.0" prefWidth="250.0" text="Process Tricolour">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -85,5 +85,10 @@
          </font>
       </Text>
       <Slider fx:id="BlueSlider" blockIncrement="1.0" layoutX="900.0" layoutY="354.0" max="255.0" onDragDetected="#RGBAdjust" prefHeight="14.0" prefWidth="200.0" scaleX="1.5" scaleY="1.5" scaleZ="1.5" />
+      <Button fx:id="DetectCellsBtn" layoutX="900.0" layoutY="238.0" mnemonicParsing="false" onAction="#DetectionTab" prefHeight="60.0" prefWidth="200.0" text="Detect Blood Cells">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
    </children>
 </Pane>
