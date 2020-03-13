@@ -47,25 +47,28 @@ public class RecognisionController {
 
         BloodCells = new int[width * height];
 
-        for (int readY = 0; readY < img.getWidth(); readY++) {
-            for (int readX = 0; readX < img.getHeight(); readX++) {
-                Color color = pixelReader.getColor(readX,readY);
+        for (int readX = 0; readX < width; readX++) {
+            for (int readY = 0; readY < height; readY++) {
+                int currentPixel = (int) ((readY * width) + readX);
+                Color color = pixelReader.getColor(readY,readX);
                 double Red = color.getRed();
-                double Green = color.getGreen();
-                double Blue = color.getBlue();
-
                 int i = 0;
-                i++;
-
-                    //if (color.getRed() == 1 && color.getGreen() == 1 && color.getBlue() == 1) {
+                //if (color.getRed() == 1 && color.getGreen() == 1 && color.getBlue() == 1) {
                 if(Red > 0.560 && Red < 0.85) {
-                        BloodCells[i] = 0;
-                    }
-                     else  {
                         BloodCells[i] = 1;
                     }
-
+                     else  {
+                        BloodCells[i] = -1;
+                    }
                     System.out.print(BloodCells[i]);
+
+                if(currentPixel < (height * width - 1) && BloodCells[i] != -1 && BloodCells[i + 1] != -1) {
+                    union(BloodCells,currentPixel,currentPixel + 1); //change one to root
+                }
+                if(BloodCells[i] != -1 && (currentPixel+width) < (height * width-1) && BloodCells[currentPixel + width] != -1) {
+                    union(BloodCells, currentPixel, currentPixel + width); //check above for root
+                }
+                i++;
 
             }
             System.out.println();
@@ -86,6 +89,18 @@ public class RecognisionController {
         } catch (IOException el) {
             el.printStackTrace();
         }
+    }
+
+    //Recursive version of union find
+    public static int find(int[] a, int id) {
+        if(a[id] == id) return id;
+        else return a[id]= find(a,a[id]);
+        //else return find(a,a[id]);
+    }
+
+    //Quick union of disjoint sets containing elements p and q
+    public static void union(int[] a, int p, int q) {
+        a[find(a,q)]=find(a,p);
     }
 
 
