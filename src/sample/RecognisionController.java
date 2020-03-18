@@ -10,7 +10,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -42,23 +44,51 @@ public class RecognisionController {
 
     @FXML
     public void AnalyiseImg(ActionEvent e) {
-        int i =0;
-        for (int readY = 0; readY < width; readY++) {
-            for (int readX = 0; readX < height-1; readX++) {
-                if (TricolourController.BloodCells[readY*width+readX] != 0 && (TricolourController.BloodCells[readY*width+readX+1] != 0)) {
-                    Recognision.union(TricolourController.BloodCells,readY*width+readX,readY*width+readX+1);
-                }
-                if (TricolourController.BloodCells[readY*width+readX] != 0 && TricolourController.BloodCells[width+readX] != 0){
-                    Recognision.union(TricolourController.BloodCells,readY*width+readX,width+readX);
 
-                    i++;
+        for (int readY = 0; readY < height; readY++) {
+            for (int readX = 0; readX < width - 1; readX++) {
+                if (TricolourController.BloodCells[readY * width + readX] != 0 && (TricolourController.BloodCells[readY * width + readX + 1] != 0)) {
+                    Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width + readX + 1);
+                }
+                if (readY < height - 1 && TricolourController.BloodCells[readY * width + readX] != 0 && TricolourController.BloodCells[readY * width + readX + width] != 0) {
+                    Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width+readX+width);
                 }
             }
         }
-        System.out.println("Union Set---------------------------------------------------------------");
-        for(int id=0;id<TricolourController.BloodCells.length;id++)
-            System.out.println("The root of element "+id+" is "+Recognision.find(TricolourController.BloodCells,id)+" (element value: "+TricolourController.BloodCells[id]+")");
+
+        for (int i = 0; i < TricolourController.BloodCells.length; i++) {
+            if (i % width == 0) System.out.println(); //New line
+            System.out.print(Recognision.find(TricolourController.BloodCells, i) + " "); //Print root value
+        }
+
+        int id = 1543;
+        Rectangle r = null;
+
+        for (int i = 0; i < TricolourController.BloodCells.length; i++) {
+            if (TricolourController.BloodCells[i] != 0 && Recognision.find(TricolourController.BloodCells, i) == 1543) {
+                {
+                    int x = i % width, y = i / width;
+                    if (r == null) r = new Rectangle(x, y, 1, 1);
+                    else {
+                        if (x > r.getX() + r.getWidth()) r.setWidth(x - r.getX());
+                        if (x < r.getX()) {
+                            r.setWidth(r.getX() + r.getWidth() - x);
+                            r.setX(x);
+                        }
+                        if (y > r.getY() + r.getHeight()) r.setHeight(y - r.getY());
+                    }
+                }
+            }
+        }
+        if (r != null) {
+            r.setFill(Color.TRANSPARENT);
+            r.setStroke(Color.BLUE);
+            r.setTranslateX(ImageViewTri.getLayoutX());
+            r.setTranslateY(ImageViewTri.getLayoutY());
+            ((Pane) ImageViewTri.getParent()).getChildren().add(r);
+        }
     }
+
 
 
 
@@ -77,31 +107,5 @@ public class RecognisionController {
             el.printStackTrace();
         }
     }
-
-/*
-    //Recursive version of union find
-    public static int findE(int[] a, int id) {
-        if(a[id] == id) return id;
-        else return a[id]= findE(a,a[id]);
-        //else return find(a,a[id]);
-    }
-
-    public static int find(int[] a, int id) {
-        if (a[id] == -1) return -1;
-        while(a[id] != id) {
-            a[id] = a[a[id]];
-            id=a[id];
-        }
-        return id;
-    }
-
-    //Quick union of disjoint sets containing elements p and q
-    public static void union(int[] a, int p, int q) {
-        a[find(a,q)]=find(a,p);
-    }
-*/
-
-
-
 
 }
