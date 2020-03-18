@@ -17,7 +17,6 @@ import java.io.IOException;
 
 public class RecognisionController {
 
-    public int[] BloodCells;
     private PixelReader pixelReader;
     private Image OriginalImage = Controller.inputImage;
 
@@ -26,6 +25,9 @@ public class RecognisionController {
     @FXML ImageView ImageViewTri;
     @FXML MenuItem Quit;
     @FXML MenuItem MainWindow;
+
+    int width = (int) Controller.processedImg.getWidth();
+    int height = (int) Controller.processedImg.getHeight();
 
 
     @FXML
@@ -40,40 +42,25 @@ public class RecognisionController {
 
     @FXML
     public void AnalyiseImg(ActionEvent e) {
-        Image img = ImageViewTri.getImage();
-
-        int width = (int) img.getWidth();
-        int height = (int) img.getHeight();
-
-        BloodCells = new int[width * height];
-
-        for (int readX = 0; readX < width; readX++) {
-            for (int readY = 0; readY < height; readY++) {
-                int currentPixel = (int) ((readY * width) + readX);
-                Color color = pixelReader.getColor(readY,readX);
-                double Red = color.getRed();
-                int i = 0;
-                //if (color.getRed() == 1 && color.getGreen() == 1 && color.getBlue() == 1) {
-                if(Red > 0.560 && Red < 0.85) {
-                        BloodCells[i] = 1;
-                    }
-                     else  {
-                        BloodCells[i] = -1;
-                    }
-                    System.out.print(BloodCells[i]);
-
-                if(currentPixel < (height * width - 1) && BloodCells[i] != -1 && BloodCells[i + 1] != -1) {
-                    union(BloodCells,currentPixel,currentPixel + 1); //change one to root
+        int i =0;
+        for (int readY = 0; readY < width; readY++) {
+            for (int readX = 0; readX < height-1; readX++) {
+                if (TricolourController.BloodCells[readY*width+readX] != 0 && (TricolourController.BloodCells[readY*width+readX+1] != 0)) {
+                    Recognision.union(TricolourController.BloodCells,readY*width+readX,readY*width+readX+1);
                 }
-                if(BloodCells[i] != -1 && (currentPixel+width) < (height * width-1) && BloodCells[currentPixel + width] != -1) {
-                    union(BloodCells, currentPixel, currentPixel + width); //check above for root
-                }
-                i++;
+                if (TricolourController.BloodCells[readY*width+readX] != 0 && TricolourController.BloodCells[width+readX] != 0){
+                    Recognision.union(TricolourController.BloodCells,readY*width+readX,width+readX);
 
+                    i++;
+                }
             }
-            System.out.println();
         }
+        System.out.println("Union Set---------------------------------------------------------------");
+        for(int id=0;id<TricolourController.BloodCells.length;id++)
+            System.out.println("The root of element "+id+" is "+Recognision.find(TricolourController.BloodCells,id)+" (element value: "+TricolourController.BloodCells[id]+")");
     }
+
+
 
     //Exit Program Method
     @FXML
@@ -91,17 +78,30 @@ public class RecognisionController {
         }
     }
 
+/*
     //Recursive version of union find
-    public static int find(int[] a, int id) {
+    public static int findE(int[] a, int id) {
         if(a[id] == id) return id;
-        else return a[id]= find(a,a[id]);
+        else return a[id]= findE(a,a[id]);
         //else return find(a,a[id]);
+    }
+
+    public static int find(int[] a, int id) {
+        if (a[id] == -1) return -1;
+        while(a[id] != id) {
+            a[id] = a[a[id]];
+            id=a[id];
+        }
+        return id;
     }
 
     //Quick union of disjoint sets containing elements p and q
     public static void union(int[] a, int p, int q) {
         a[find(a,q)]=find(a,p);
     }
+*/
+
+
 
 
 }

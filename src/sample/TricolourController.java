@@ -42,6 +42,8 @@ public class TricolourController {
     private PixelReader pixelReader;
     public static Image ConvertedImage = null; //Image to be used in recognision
 
+    public static int[] BloodCells;
+
     @FXML
     public void MainWindowScene(ActionEvent e) {
         try {
@@ -121,7 +123,11 @@ public class TricolourController {
         WritableImage wImage = new WritableImage(
                 (int) OriginalImage.getWidth(),
                 (int) OriginalImage.getHeight());
+        int width = (int) OriginalImage.getWidth();
+        int height = (int) OriginalImage.getHeight();
         PixelWriter pixelWriter = wImage.getPixelWriter();
+        BloodCells = new int[width * height];
+        int i =0;
 
         for(int readY = 0; readY < OriginalImage.getHeight(); readY++) {
             for(int readX = 0; readX < OriginalImage.getWidth(); readX++) {
@@ -132,12 +138,19 @@ public class TricolourController {
 
                 if(Red > 0.560 && Red < 0.85) {
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(1, 0, 0));
+                    BloodCells[i] = i;
                 }
                 else if(Red > 0.27 && Red < 0.5 && Green > 0.04 && Green < 0.22 && Blue > 0.5 && Blue < 0.70 ) {
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(0.27, 0.133, 0.384));
+                    BloodCells[i] =i;                }
+                else {
+                    wImage.getPixelWriter().setColor(readX,readY, Color.color(1,1,1));
+                    BloodCells[i] = 0;
                 }
-                else wImage.getPixelWriter().setColor(readX,readY, Color.color(1,1,1));
+                System.out.print(BloodCells[i]);
+                i++;
             }
+            System.out.println();
         }
         ImageViewTri.setImage(wImage);
         Controller.processedImg = wImage;
