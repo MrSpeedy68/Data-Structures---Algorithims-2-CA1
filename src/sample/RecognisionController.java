@@ -61,11 +61,11 @@ public class RecognisionController {
             System.out.print(Recognision.find(TricolourController.BloodCells, i) + " "); //Print root value
         }
 
-        int id = 1543;
+        int id = 24604;
         Rectangle r = null;
 
         for (int i = 0; i < TricolourController.BloodCells.length; i++) {
-            if (TricolourController.BloodCells[i] != 0 && Recognision.find(TricolourController.BloodCells, i) == 1543) {
+            if (TricolourController.BloodCells[i] != 0 && Recognision.find(TricolourController.BloodCells, i) == 24604) {
                 {
                     int x = i % width, y = i / width;
                     if (r == null) r = new Rectangle(x, y, 1, 1);
