@@ -147,10 +147,10 @@ public class TricolourController {
                     wImage.getPixelWriter().setColor(readX,readY, Color.color(1,1,1));
                     BloodCells[i] = 0;
                 }
-                System.out.print(BloodCells[i]);
+                //System.out.print(BloodCells[i]);
                 i++;
             }
-            System.out.println();
+            //System.out.println();
         }
         ImageViewTri.setImage(wImage);
         Controller.processedImg = wImage;

@@ -16,6 +16,8 @@ import javafx.scene.shape.Rectangle;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class RecognisionController {
 
@@ -51,7 +53,7 @@ public class RecognisionController {
                     Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width + readX + 1);
                 }
                 if (readY < height - 1 && TricolourController.BloodCells[readY * width + readX] != 0 && TricolourController.BloodCells[readY * width + readX + width] != 0) {
-                    Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width+readX+width);
+                    Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width + readX + width);
                 }
             }
         }
@@ -61,34 +63,58 @@ public class RecognisionController {
             System.out.print(Recognision.find(TricolourController.BloodCells, i) + " "); //Print root value
         }
 
-        int id = 24604;
-        Rectangle r = null;
+        displayRectangles();
+    }
 
-        for (int i = 0; i < TricolourController.BloodCells.length; i++) {
-            if (TricolourController.BloodCells[i] != 0 && Recognision.find(TricolourController.BloodCells, i) == 24604) {
-                {
-                    int x = i % width, y = i / width;
-                    if (r == null) r = new Rectangle(x, y, 1, 1);
-                    else {
-                        if (x > r.getX() + r.getWidth()) r.setWidth(x - r.getX());
-                        if (x < r.getX()) {
-                            r.setWidth(r.getX() + r.getWidth() - x);
-                            r.setX(x);
+
+    Rectangle[] r = new Rectangle[1000];
+
+    public void displayRectangles() {
+            int id = 24604;
+            int id2 =77872;
+
+            int arr[] = IntStream.of(getArrayRoots()).distinct().toArray(); //takes only the unique values from the array
+            int rIndex = 0;
+
+
+            for(int j=0; j < arr.length - 1; j++) {
+                for (int i = 0; i < TricolourController.BloodCells.length; i++) {
+                    if (TricolourController.BloodCells[i] == arr[j]) {
+                        //if (TricolourController.BloodCells[i] != 0 && Recognision.find(TricolourController.BloodCells, i) == id2 ) {
+                        int x = i % width, y = i / width;
+                        if (r[rIndex] == null) r[rIndex] = new Rectangle(x, y, 1, 1);
+                        else {
+                            if (x > r[rIndex].getX() + r[rIndex].getWidth()) r[rIndex].setWidth(x - r[rIndex].getX());
+                            if (x < r[rIndex].getX()) {
+                                r[rIndex].setWidth(r[rIndex].getX() + r[rIndex].getWidth() - x);
+                                r[rIndex].setX(x);
+                            }
+                            if (y > r[rIndex].getY() + r[rIndex].getHeight()) r[rIndex].setHeight(y - r[rIndex].getY());
                         }
-                        if (y > r.getY() + r.getHeight()) r.setHeight(y - r.getY());
                     }
+                }
+                if (r[rIndex] != null) {
+                    r[rIndex].setFill(Color.TRANSPARENT);
+                    r[rIndex].setStroke(Color.BLUE);
+                    r[rIndex].setTranslateX(ImageViewTri.getLayoutX());
+                    r[rIndex].setTranslateY(ImageViewTri.getLayoutY());
+                    ((Pane) ImageViewTri.getParent()).getChildren().add(r[rIndex++]);
                 }
             }
         }
-        if (r != null) {
-            r.setFill(Color.TRANSPARENT);
-            r.setStroke(Color.BLUE);
-            r.setTranslateX(ImageViewTri.getLayoutX());
-            r.setTranslateY(ImageViewTri.getLayoutY());
-            ((Pane) ImageViewTri.getParent()).getChildren().add(r);
-        }
-    }
 
+//Gets the roots of the array and adds them to a new array if the roots are greater than 50 in size
+        public int[] getArrayRoots() {
+        int arr[] = new int[width*height];
+        int temp =0;
+        for(int i = 0; i< TricolourController.BloodCells.length; i++) {
+            if(TricolourController.BloodCells[i] > 50) {
+                arr[temp] = TricolourController.BloodCells[i];
+                temp++;
+            }
+        }
+        return arr;
+        }
 
 
 
