@@ -1,8 +1,11 @@
 package sample;
 
+/**
+ * Recognition* class used for union and find methods
+ */
 public class Recognision {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         int[] dset={1,1,1,1,0,0,1,0,1,1,1,0,0,0,0,1,1,1,1};
         System.out.println("Before Union (of Sets with Elements 3 and 4)\n-------------------------------------------");
@@ -13,21 +16,35 @@ public class Recognision {
         for(int id=0;id<dset.length;id++)
             System.out.println("The root of element "+id+" is "+find(dset,id)+" (element value: "+dset[id]+")");
 
-    }
+    }*/
 
-    //Recursive version of union find
+/*    //Recursive version of union find
     public static int findE(int[] a, int id) {
         if(a[id] == id) return id;
         else return findE(a,a[id]);
-    }
+    }*/
 
     //Quick union of disjoint sets containing elements p and q
+
+    /**
+     * Quick union of disjoint sets containing elements p and q
+     * @param a array BloodCells
+     * @param p pixel
+     * @param q pixel
+     */
     public static void union(int[] a, int p, int q) {
         a[find(a,q)]=find(a,p);
     }
 
 
     //Iterative
+
+    /**
+     * Iterative version of union find
+     * @param a array BloodCells
+     * @param id int id
+     * @return an int of the id
+     */
     public static int find(int[] a, int id) {
         if (a[id] == -1) return -1;
         while(a[id] != id) {

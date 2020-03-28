@@ -6,19 +6,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import javax.swing.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
+/**
+ * RecognitionController is the main class to handle the processed image and aquire the roots of each blood cell and then place rectangles around each blood cell and number them accordingly
+ */
 public class RecognisionController {
 
     private PixelReader pixelReader;
@@ -29,11 +31,14 @@ public class RecognisionController {
     @FXML ImageView ImageViewTri;
     @FXML MenuItem Quit;
     @FXML MenuItem MainWindow;
+    @FXML TextArea RedCellText;
 
     int width = (int) Controller.processedImg.getWidth();
     int height = (int) Controller.processedImg.getHeight();
 
-
+    /**
+     * initialize method used to bring in current original image and processed tri colour image
+     */
     @FXML
     public void initialize() {
         if(Controller.processedImg == null) {
@@ -44,6 +49,11 @@ public class RecognisionController {
         pixelReader = OriginalImage.getPixelReader();
     }
 
+    /**
+     * AnalyiseImg method is used to go through the image and group the red bloodcells together by scanning the image and the first red pixel it hits it sets it as a root and then checks the pixel above it below it and next to it if they are also red blood cells
+     * if they are also red it adds them to the union of the root
+     * @param e Button BloodCellbtn click
+     */
     @FXML
     public void AnalyiseImg(ActionEvent e) {
 
@@ -67,22 +77,32 @@ public class RecognisionController {
     }
 
 
-    Rectangle[] r = new Rectangle[1000];
+    Rectangle[] r = new Rectangle[1000]; //hard coded values for the amount of rectangles
+    Label[] l = new Label[1000]; //hard coded value for the amount of labels
 
+    /**
+     * displayRectangles method is used to place rectangles around the roots of each blood cells and also place a label with a number on it.
+     * The method first gathers all the unique roots from the getArrayRoots() method and works by checking the roots and once on a root thats not 0 it places a rectangle of 1 pixel by 1 pixel
+     * it then keeps going through the image and starts expanding the placed rectangle around the whole root. Also making sure it only places a rectangle on the Imnageview only where the image is located
+     */
     public void displayRectangles() {
             int id = 24604;
             int id2 =77872;
 
             int arr[] = IntStream.of(getArrayRoots()).distinct().toArray(); //takes only the unique values from the array
             int rIndex = 0;
+            int lIndex = 0;
+            int numCells = 0;
 
 
             for(int j=0; j < arr.length - 1; j++) {
                 for (int i = 0; i < TricolourController.BloodCells.length; i++) {
                     if (TricolourController.BloodCells[i] == arr[j]) {
-                        //if (TricolourController.BloodCells[i] != 0 && Recognision.find(TricolourController.BloodCells, i) == id2 ) {
                         int x = i % width, y = i / width;
-                        if (r[rIndex] == null) r[rIndex] = new Rectangle(x, y, 1, 1);
+                        if (r[rIndex] == null) {
+                            r[rIndex] = new Rectangle(x, y, 1, 1);
+                            numCells++;
+                        }
                         else {
                             if (x > r[rIndex].getX() + r[rIndex].getWidth()) r[rIndex].setWidth(x - r[rIndex].getX());
                             if (x < r[rIndex].getX()) {
@@ -95,20 +115,37 @@ public class RecognisionController {
                 }
                 if (r[rIndex] != null) {
                     r[rIndex].setFill(Color.TRANSPARENT);
-                    r[rIndex].setStroke(Color.BLUE);
+                    if(r[rIndex].getWidth() * r[rIndex].getHeight() > 2500) {
+                        r[rIndex].setStroke(Color.BLUE);
+                    }
+                    else r[rIndex].setStroke(Color.DARKGREEN);
+
                     r[rIndex].setTranslateX(ImageViewTri.getLayoutX());
                     r[rIndex].setTranslateY(ImageViewTri.getLayoutY());
                     ((Pane) ImageViewTri.getParent()).getChildren().add(r[rIndex++]);
+                    RedCellText.setText(String.valueOf(numCells));
                 }
+                    l[lIndex] = new Label();
+                    l[lIndex].setText(String.valueOf(numCells));
+                    l[lIndex].setTextFill(Color.BLACK);
+                    l[lIndex].setTranslateX(r[rIndex - 1].getX());
+                    l[lIndex].setTranslateY(r[rIndex - 1].getY());
+
+                    ((Pane) ImageViewTri.getParent()).getChildren().add(l[lIndex++]);
             }
         }
 
-//Gets the roots of the array and adds them to a new array if the roots are greater than 50 in size
+//Gets the roots of the array and adds them to a new array if the roots are greater than 100 in size
+
+    /**
+     * This method creates an array of the size of the image and creates a new array arr[] of all the roots that are greater than 100 in size
+     * @return array arr[]
+     */
         public int[] getArrayRoots() {
         int arr[] = new int[width*height];
         int temp =0;
         for(int i = 0; i< TricolourController.BloodCells.length; i++) {
-            if(TricolourController.BloodCells[i] > 50) {
+            if(TricolourController.BloodCells[i] > 100) {
                 arr[temp] = TricolourController.BloodCells[i];
                 temp++;
             }
@@ -119,11 +156,20 @@ public class RecognisionController {
 
 
     //Exit Program Method
+
+    /**
+     * exit program method
+     * @param e MenuItem Quit click
+     */
     @FXML
     public void ExitProgram(ActionEvent e) {
         Runtime.getRuntime().exit(0);
     }
 
+    /**
+     * MainWindowScene is used to bring the user back to the Mainwindow scene
+     * @param e MenuItem MainWindow
+     */
     @FXML
     public void MainWindowScene(ActionEvent e) {
         try {

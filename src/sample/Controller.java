@@ -14,21 +14,51 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 
+/**
+ * Controller method used for main FXML window to load image file into the image view
+ */
 public class Controller {
 
+    /**
+     * ImageViewmain is the main ImageView that the file will be loaded into
+     */
     @FXML public ImageView ImageViewMain;
+    /**
+     * Menu Item used to run the OpenPicture method
+     */
     @FXML public MenuItem OpenFile;
+    /**
+     * Menu Item used to Exit the program
+     */
     @FXML public MenuItem Quit;
+    /**
+     * Button used to change scene to the tri-colour scene
+     */
     @FXML public Button Btn;
-    @FXML public Button btn2;
 
-
+    /**
+     * Initialisation for filepath name
+     */
     public String filepath = "";
+    /**
+     * Static Image for inputted file of the image
+     */
     public static Image inputImage;
+    /**
+     * Static Image of the processed image from the tricolour method which will then replace the null value
+     */
     public static Image processedImg = null;
+    /**
+     * PixelReader initialisation
+     */
     public PixelReader pixelReader;
 
-    //Open Image Method
+    /**
+     *  OpenPicture method is used to open the file chooser so the user can select an image to be used for processing
+     *  The program will then take the file path and set the String and place the selected file into the image View of
+     *  the ImageViewMain and set its resolution to 512 x 512 pixels.
+     * @param e Button click MenuItem OpenFile
+     */
     @FXML
     public void OpenPicture(ActionEvent e) {
         FileChooser fileChooser = new FileChooser(); //Open image method
@@ -41,7 +71,10 @@ public class Controller {
         pixelReader = inputImage.getPixelReader();
     }
 
-    //Change Scene to Tricolour
+    /**
+     * triColour method is used to change FXML scenes to the Tricolour method
+     * @param e Button click of Btn
+     */
     @FXML
     public void triColour(ActionEvent e) {
         try {
@@ -52,12 +85,18 @@ public class Controller {
         }
     }
 
+    /**
+     * initialize method used to set the inputted image if you decide to go back to the main tab
+     */
     @FXML
     public void initialize() {
         ImageViewMain.setImage(inputImage);
     }
 
-    //Exit Program Method
+    /**
+     * ExitProgram method used to stop the program and exit.
+     * @param e MenuItem press Quit
+     */
     @FXML
     public void ExitProgram(ActionEvent e) {
         Runtime.getRuntime().exit(0);
