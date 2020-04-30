@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
@@ -65,17 +66,32 @@ public class RecognisionController {
                 if (readY < height - 1 && TricolourController.BloodCells[readY * width + readX] != 0 && TricolourController.BloodCells[readY * width + readX + width] != 0) {
                     Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width + readX + width);
                 }
+
+
+
+
+                if (TricolourController.WhiteCells[readY * width + readX] != 0 && (TricolourController.WhiteCells[readY * width + readX + 1] != 0)) {
+                    Recognision.union(TricolourController.WhiteCells, readY * width + readX, readY * width + readX + 1);
+                }
+                if (readY < height - 1 && TricolourController.WhiteCells[readY * width + readX] != 0 && TricolourController.WhiteCells[readY * width + readX + width] != 0) {
+                    Recognision.union(TricolourController.WhiteCells, readY * width + readX, readY * width + readX + width);
+                }
+
             }
         }
 
-        for (int i = 0; i < TricolourController.BloodCells.length; i++) {
+        /*for (int i = 0; i < TricolourController.BloodCells.length; i++) {
             if (i % width == 0) System.out.println(); //New line
             System.out.print(Recognision.find(TricolourController.BloodCells, i) + " "); //Print root value
         }
 
+        for (int i = 0; i < TricolourController.WhiteCells.length; i++) {
+            if (i % width == 0) System.out.println(); //New line
+            System.out.print(Recognision.find(TricolourController.WhiteCells, i) + " "); //Print root value
+        }*/
+
         displayRectangles();
     }
-
 
     Rectangle[] r = new Rectangle[1000]; //hard coded values for the amount of rectangles
     Label[] l = new Label[1000]; //hard coded value for the amount of labels
@@ -86,14 +102,13 @@ public class RecognisionController {
      * it then keeps going through the image and starts expanding the placed rectangle around the whole root. Also making sure it only places a rectangle on the Imnageview only where the image is located
      */
     public void displayRectangles() {
-            int id = 24604;
-            int id2 =77872;
+        findDuplicates();
 
-            int arr[] = IntStream.of(getArrayRoots()).distinct().toArray(); //takes only the unique values from the array
+            int arr[] = IntStream.of(findDuplicates()).distinct().toArray(); //takes only the unique values from the array
             int rIndex = 0;
             int lIndex = 0;
             int numCells = 0;
-
+            System.out.println(Arrays.toString(arr));
 
             for(int j=0; j < arr.length - 1; j++) {
                 for (int i = 0; i < TricolourController.BloodCells.length; i++) {
@@ -135,6 +150,7 @@ public class RecognisionController {
             }
         }
 
+
 //Gets the roots of the array and adds them to a new array if the roots are greater than 100 in size
 
     /**
@@ -145,12 +161,33 @@ public class RecognisionController {
         int arr[] = new int[width*height];
         int temp =0;
         for(int i = 0; i< TricolourController.BloodCells.length; i++) {
-            if(TricolourController.BloodCells[i] > 100) {
+            if(TricolourController.BloodCells[i] > 1000) {
                 arr[temp] = TricolourController.BloodCells[i];
                 temp++;
             }
         }
         return arr;
+        }
+
+        public int[] findDuplicates() {
+            int arr[] = new int[width*height];
+            int currentNum;
+            int count = 0;
+            int temp = 0;
+            for(int i = 0; i < TricolourController.BloodCells.length; i++) {
+                currentNum = TricolourController.BloodCells[i];
+                for(int j = 0; j < TricolourController.BloodCells.length && count <= 101; j++) {
+                    if(currentNum == TricolourController.BloodCells[j]) {
+                        count++;
+                    }
+                    if(count > 100) {
+                        arr[temp] = currentNum;
+                        temp++;
+                    }
+                    //go through teh array grab a number go through the whole array if it oocurs more than 100 times add it to the array
+                }
+            }
+            return arr;
         }
 
 

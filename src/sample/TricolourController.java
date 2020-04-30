@@ -53,6 +53,8 @@ public class TricolourController {
      */
     public static int[] BloodCells;
 
+    public static int[] WhiteCells;
+
     /**
      * MainWindowScene is used to open the main window of the program where you load the image.
      * @param e MenuItem MainWindow click
@@ -165,6 +167,7 @@ public class TricolourController {
         int height = (int) OriginalImage.getHeight();
         PixelWriter pixelWriter = wImage.getPixelWriter();
         BloodCells = new int[width * height];
+        WhiteCells = new int[width * height];
         int i =0;
 
         for(int readY = 0; readY < OriginalImage.getHeight(); readY++) {
@@ -177,16 +180,21 @@ public class TricolourController {
                 if(Red > 0.560 && Red < 0.85) { //Hard coded RGB values from experimenting
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(1, 0, 0));
                     BloodCells[i] = i;
+                    WhiteCells[i] = 0;
                 }
                 else if(Red > 0.27 && Red < 0.5 && Green > 0.04 && Green < 0.22 && Blue > 0.5 && Blue < 0.70 ) {
                     wImage.getPixelWriter().setColor(readX, readY, Color.color(0.27, 0.133, 0.384));
-                    BloodCells[i] =i;                }
+                    BloodCells[i] = 0; //Add 1 million to distinguish between red and purple cells if cell is > 1million must be white blood cell
+                    WhiteCells[i] = i;
+                }
                 else {
                     wImage.getPixelWriter().setColor(readX,readY, Color.color(1,1,1));
                     BloodCells[i] = 0;
+                    WhiteCells[i] = 0;
                 }
                 //System.out.print(BloodCells[i]);
                 i++;
+                //System.out.println(i);
             }
             //System.out.println();
         }
