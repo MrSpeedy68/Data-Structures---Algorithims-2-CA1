@@ -108,7 +108,6 @@ public class RecognisionController {
             int rIndex = 0;
             int lIndex = 0;
             int numCells = 0;
-            System.out.println(Arrays.toString(arr));
 
             for(int j=0; j < arr.length - 1; j++) {
                 for (int i = 0; i < TricolourController.BloodCells.length; i++) {
@@ -157,40 +156,37 @@ public class RecognisionController {
      * This method creates an array of the size of the image and creates a new array arr[] of all the roots that are greater than 100 in size
      * @return array arr[]
      */
-        public int[] getArrayRoots() {
-        int arr[] = new int[width*height];
-        int temp =0;
-        for(int i = 0; i< TricolourController.BloodCells.length; i++) {
-            if(TricolourController.BloodCells[i] > 1000) {
-                arr[temp] = TricolourController.BloodCells[i];
-                temp++;
-            }
-        }
-        return arr;
-        }
-
         public int[] findDuplicates() {
+            int tempBloodC[] = TricolourController.BloodCells.clone();
             int arr[] = new int[width*height];
-            int currentNum;
-            int count = 0;
-            int temp = 0;
-            for(int i = 0; i < TricolourController.BloodCells.length; i++) {
-                currentNum = TricolourController.BloodCells[i];
-                for(int j = 0; j < TricolourController.BloodCells.length && count <= 101; j++) {
-                    if(currentNum == TricolourController.BloodCells[j]) {
-                        count++;
+            int occurance = 1;
+            int j = 0;
+
+            Arrays.sort(tempBloodC);
+
+            for(int i = 0; i < tempBloodC.length; i++) {
+                if(i < tempBloodC.length - 1) {
+                    if(tempBloodC[i] == tempBloodC[i + 1]) { //checks the sorted array to see if the next element is the same and adds 1 to occurance if it is
+                        occurance++;
                     }
-                    if(count > 100) {
-                        arr[temp] = currentNum;
-                        temp++;
+                }
+                else {
+                    System.out.println(tempBloodC[i]); //end of array
+                }
+                if (i < tempBloodC.length - 1 && tempBloodC[i] != tempBloodC[i + 1]) {
+                    if(occurance >= 100) {
+                        arr[j] = tempBloodC[i]; //if the occurance is > than specified number then add to array and move to new element in array.
+                        j++;
+                        occurance = 1;
                     }
-                    //go through teh array grab a number go through the whole array if it oocurs more than 100 times add it to the array
+                    else {
+                        //move to new element in array and set occurance to 0
+                        occurance = 1;
+                    }
                 }
             }
             return arr;
         }
-
-
 
     //Exit Program Method
 
