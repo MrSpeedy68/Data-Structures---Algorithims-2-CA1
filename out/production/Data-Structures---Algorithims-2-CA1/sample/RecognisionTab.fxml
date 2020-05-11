@@ -48,11 +48,12 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <Text layoutX="750.0" layoutY="624.0" strokeType="OUTSIDE" strokeWidth="0.0" text="White Cells Detected:">
+      <Text layoutX="750.0" layoutY="612.0" strokeType="OUTSIDE" strokeWidth="0.0" text="White Cells Detected:">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
       <TextArea fx:id="RedCellText" layoutX="979.0" layoutY="642.0" prefHeight="30.0" prefWidth="126.0" />
+      <TextArea fx:id="WhiteCellText" layoutX="979.0" layoutY="586.0" prefHeight="30.0" prefWidth="126.0" />
    </children>
 </Pane>

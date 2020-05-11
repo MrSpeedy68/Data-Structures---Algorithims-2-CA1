@@ -33,6 +33,7 @@ public class RecognisionController {
     @FXML MenuItem Quit;
     @FXML MenuItem MainWindow;
     @FXML TextArea RedCellText;
+    @FXML TextArea WhiteCellText;
 
     int width = (int) Controller.processedImg.getWidth();
     int height = (int) Controller.processedImg.getHeight();
@@ -60,6 +61,7 @@ public class RecognisionController {
 
         for (int readY = 0; readY < height; readY++) {
             for (int readX = 0; readX < width - 1; readX++) {
+                //For red blood cells
                 if (TricolourController.BloodCells[readY * width + readX] != 0 && (TricolourController.BloodCells[readY * width + readX + 1] != 0)) {
                     Recognision.union(TricolourController.BloodCells, readY * width + readX, readY * width + readX + 1);
                 }
@@ -69,7 +71,7 @@ public class RecognisionController {
 
 
 
-
+//For white blood cells
                 if (TricolourController.WhiteCells[readY * width + readX] != 0 && (TricolourController.WhiteCells[readY * width + readX + 1] != 0)) {
                     Recognision.union(TricolourController.WhiteCells, readY * width + readX, readY * width + readX + 1);
                 }
@@ -80,17 +82,18 @@ public class RecognisionController {
             }
         }
 
-        /*for (int i = 0; i < TricolourController.BloodCells.length; i++) {
+/*        for (int i = 0; i < TricolourController.BloodCells.length; i++) {
             if (i % width == 0) System.out.println(); //New line
             System.out.print(Recognision.find(TricolourController.BloodCells, i) + " "); //Print root value
-        }
+        }*/
 
-        for (int i = 0; i < TricolourController.WhiteCells.length; i++) {
+/*        for (int i = 0; i < TricolourController.WhiteCells.length; i++) {
             if (i % width == 0) System.out.println(); //New line
             System.out.print(Recognision.find(TricolourController.WhiteCells, i) + " "); //Print root value
         }*/
 
         displayRectangles();
+
     }
 
     Rectangle[] r = new Rectangle[1000]; //hard coded values for the amount of rectangles
@@ -102,63 +105,111 @@ public class RecognisionController {
      * it then keeps going through the image and starts expanding the placed rectangle around the whole root. Also making sure it only places a rectangle on the Imnageview only where the image is located
      */
     public void displayRectangles() {
-        findDuplicates();
 
-            int arr[] = IntStream.of(findDuplicates()).distinct().toArray(); //takes only the unique values from the array
-            int rIndex = 0;
-            int lIndex = 0;
-            int numCells = 0;
 
-            for(int j=0; j < arr.length - 1; j++) {
-                for (int i = 0; i < TricolourController.BloodCells.length; i++) {
-                    if (TricolourController.BloodCells[i] == arr[j]) {
-                        int x = i % width, y = i / width;
-                        if (r[rIndex] == null) {
-                            r[rIndex] = new Rectangle(x, y, 1, 1);
-                            numCells++;
-                        }
-                        else {
-                            if (x > r[rIndex].getX() + r[rIndex].getWidth()) r[rIndex].setWidth(x - r[rIndex].getX());
-                            if (x < r[rIndex].getX()) {
-                                r[rIndex].setWidth(r[rIndex].getX() + r[rIndex].getWidth() - x);
-                                r[rIndex].setX(x);
-                            }
-                            if (y > r[rIndex].getY() + r[rIndex].getHeight()) r[rIndex].setHeight(y - r[rIndex].getY());
-                        }
-                    }
-                }
-                if (r[rIndex] != null) {
-                    r[rIndex].setFill(Color.TRANSPARENT);
-                    if(r[rIndex].getWidth() * r[rIndex].getHeight() > 2500) {
-                        r[rIndex].setStroke(Color.BLUE);
-                    }
-                    else r[rIndex].setStroke(Color.DARKGREEN);
+        int arr[] = IntStream.of(findDuplicates(TricolourController.BloodCells)).distinct().toArray(); //takes only the unique values from the array
+        int arrWhite[] = IntStream.of(findDuplicates(TricolourController.WhiteCells)).distinct().toArray();
+        int rIndex = 0;
+        int lIndex = 0;
+        int numCells = 0;
 
-                    r[rIndex].setTranslateX(ImageViewTri.getLayoutX());
-                    r[rIndex].setTranslateY(ImageViewTri.getLayoutY());
-                    ((Pane) ImageViewTri.getParent()).getChildren().add(r[rIndex++]);
-                    RedCellText.setText(String.valueOf(numCells));
-                }
-                    l[lIndex] = new Label();
-                    l[lIndex].setText(String.valueOf(numCells));
-                    l[lIndex].setTextFill(Color.BLACK);
-                    l[lIndex].setTranslateX(r[rIndex - 1].getX());
-                    l[lIndex].setTranslateY(r[rIndex - 1].getY());
-
-                    ((Pane) ImageViewTri.getParent()).getChildren().add(l[lIndex++]);
-            }
+        for(int num : arrWhite) {
+            System.out.println(num);
         }
 
+        for(int j=0; j < arr.length - 1; j++) {
+            for (int i = 0; i < TricolourController.BloodCells.length; i++) {
+                if (TricolourController.BloodCells[i] == arr[j]) {
+                    int x = i % width, y = i / width;
+                    if (r[rIndex] == null) {
+                        r[rIndex] = new Rectangle(x, y, 1, 1);
+                        numCells++;
+                    }
+                    else {
+                        if (x > r[rIndex].getX() + r[rIndex].getWidth()) r[rIndex].setWidth(x - r[rIndex].getX());
+                        if (x < r[rIndex].getX()) {
+                            r[rIndex].setWidth(r[rIndex].getX() + r[rIndex].getWidth() - x);
+                            r[rIndex].setX(x);
+                        }
+                        if (y > r[rIndex].getY() + r[rIndex].getHeight()) r[rIndex].setHeight(y - r[rIndex].getY());
+                    }
+                }
+            }
+            if (r[rIndex] != null) {
+                r[rIndex].setFill(Color.TRANSPARENT);
+                if(r[rIndex].getWidth() * r[rIndex].getHeight() > 2500) {
+                    r[rIndex].setStroke(Color.BLUE);
+                }
+                else r[rIndex].setStroke(Color.DARKGREEN);
 
-//Gets the roots of the array and adds them to a new array if the roots are greater than 100 in size
+                r[rIndex].setTranslateX(ImageViewTri.getLayoutX());
+                r[rIndex].setTranslateY(ImageViewTri.getLayoutY());
+                ((Pane) ImageViewTri.getParent()).getChildren().add(r[rIndex++]);
+                RedCellText.setText(String.valueOf(numCells));
+            }
+            l[lIndex] = new Label();
+            l[lIndex].setText(String.valueOf(numCells));
+            l[lIndex].setTextFill(Color.BLACK);
+            l[lIndex].setTranslateX(r[rIndex - 1].getX());
+            l[lIndex].setTranslateY(r[rIndex - 1].getY());
+
+            ((Pane) ImageViewTri.getParent()).getChildren().add(l[lIndex++]);
+        }
+
+//Handles the white cell rectangles.
+        int whitenumcells = 0;
+        for(int j=0; j < arrWhite.length - 1; j++) {
+            for (int i = 0; i < TricolourController.WhiteCells.length; i++) {
+                if (TricolourController.WhiteCells[i] == arrWhite[j]) {
+                    int x = i % width, y = i / width;
+                    if (r[rIndex] == null) {
+                        r[rIndex] = new Rectangle(x, y, 1, 1);
+                        whitenumcells++;
+                    }
+                    else {
+                        if (x > r[rIndex].getX() + r[rIndex].getWidth()) r[rIndex].setWidth(x - r[rIndex].getX());
+                        if (x < r[rIndex].getX()) {
+                            r[rIndex].setWidth(r[rIndex].getX() + r[rIndex].getWidth() - x);
+                            r[rIndex].setX(x);
+                        }
+                        if (y > r[rIndex].getY() + r[rIndex].getHeight()) r[rIndex].setHeight(y - r[rIndex].getY());
+                    }
+                }
+            }
+            if (r[rIndex] != null) {
+                r[rIndex].setFill(Color.TRANSPARENT);
+                r[rIndex].setStroke(Color.YELLOW);
+
+                r[rIndex].setTranslateX(ImageViewTri.getLayoutX());
+                r[rIndex].setTranslateY(ImageViewTri.getLayoutY());
+                ((Pane) ImageViewTri.getParent()).getChildren().add(r[rIndex++]);
+                WhiteCellText.setText(String.valueOf(whitenumcells));
+            }
+            l[lIndex] = new Label();
+            l[lIndex].setText(String.valueOf(whitenumcells));
+            l[lIndex].setTextFill(Color.BLACK);
+            l[lIndex].setTranslateX(r[rIndex - 1].getX());
+            l[lIndex].setTranslateY(r[rIndex - 1].getY());
+
+            ((Pane) ImageViewTri.getParent()).getChildren().add(l[lIndex++]);
+        }
+    }
+
+
+
+
+
+
 
     /**
      * This method creates an array of the size of the image and creates a new array arr[] of all the roots that are greater than 100 in size
      * @return array arr[]
      */
-        public int[] findDuplicates() {
-            int tempBloodC[] = TricolourController.BloodCells.clone();
-            int arr[] = new int[width*height];
+    //Gets the roots of the array and adds them to a new array if the roots are greater than 100 in size
+
+        public int[] findDuplicates(int[] array) {
+            int[] tempBloodC = array.clone();
+            int[] arr = new int[width*height];
             int occurance = 1;
             int j = 0;
 
@@ -187,6 +238,13 @@ public class RecognisionController {
             }
             return arr;
         }
+
+
+
+
+
+
+
 
     //Exit Program Method
 
